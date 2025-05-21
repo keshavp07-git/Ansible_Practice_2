@@ -1,0 +1,22 @@
+--- # This playbook installs and configures web and database servers
+- name: WebServers # Name of section
+  hosts: webservers # Name of servers
+  become: yes # Use sudo
+  tasks: # Tasks to be executed
+    - name: Install httpd # Install Apache HTTP server
+      ansible.builtin.yum: # Use yum package manager
+        name: httpd # Name of package
+        state: present # Ensure it's installed
+
+    - name: Start httpd # Start Apache HTTP server
+      ansible.builtin.service: # Use service module
+        name: httpd # Name of service
+        state: started # Ensure it's started
+        enabled: yes # Ensure it starts on boot
+
+    - name: Copy file # Name of task
+      copy: # Copy file module
+        src: files/index.html # Source file on control node
+        dest: /var/www/html/index.html # Destination file on managed node
+       
+ 

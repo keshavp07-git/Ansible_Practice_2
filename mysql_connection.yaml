@@ -1,0 +1,41 @@
+- name: DBServers # Name of section
+  hosts: dbservers # Name of servers
+  become: yes # Use sudo
+  tasks: # Tasks to be executed
+    - name: Install marianadb # Install MariaDB server
+      ansible.builtin.yum: # Use yum package manager
+        name: mariadb-server # Name of package
+        state: present # Ensure it's installed
+
+    - name: Install pip3 # Install pip3
+      ansible.builtin.yum: # Use yum package manager
+        name: python3-pip # Name of package
+        state: present # Ensure it's installed
+        # pip3 is a package manager for Python 3, used to install and manage Python packages
+
+    - name: Install PyMySQL using pip3 # Install PyMySQL using pip3
+      ansible.builtin.pip: # Use pip module
+        name: PyMySQL # Name of package
+        executable: pip3 # Use pip3 executable
+        # PyMySQL is a pure-Python MySQL client, used to connect to MySQL databases from Python applications
+
+    - name: Start mariadb # Start MariaDB server
+      ansible.builtin.service: # Use service module
+        name: mariadb # Name of service
+        state: started # Ensure it's started
+        enabled: yes # Ensure it starts on boot
+
+    - name: Create a new database with name 'accounts' # Create a new database
+      community.mysql.mysql_db: # Use mysql_db module
+        name: accounts # Name of database
+        state: present  # Ensure it's present  
+        login_unix_socket: /var/lib/mysql/mysql.sock # Path to the MySQL socket file
+        # Helps to connect to the MySQL server , In Linux, socket files are used for inter-process communication (IPC) between the MySQL server and client applications.
+
+    - name: Create database user with name and password with all database privileges
+      mysql_user: # Use mysql_user module
+        name: vpc # Name of user
+        password: 12345 # Password for user
+        priv: '*.*:ALL' # Grant all privileges on all databases and tables
+        state: present # Ensure user is present
+        login_unix_socket: /var/lib/mysql/mysql.sock # Path to the MySQL socket file
