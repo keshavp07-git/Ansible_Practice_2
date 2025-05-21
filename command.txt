@@ -1,0 +1,4 @@
+--------- Executing Ansible Playbook after changing Default --------
+ ansible-playbook web-db.yaml
+ # we have mentioned inventory file location in default settings so now we dont need to mention inventory.yaml
+
